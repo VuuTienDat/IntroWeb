@@ -1,6 +1,5 @@
-# Website Bee System Việt Nam
-
-Website doanh nghiệp nhiều trang dành cho Bee System Việt Nam, xây dựng bằng Next.js và TypeScript để triển khai trên Vercel.
+# Website
+Website doanh nghiệp nhiều trang dành cho , xây dựng bằng Next.js và TypeScript để triển khai trên Vercel.
 
 ## Chạy trên máy cá nhân
 
@@ -29,7 +28,7 @@ Tạo `.env.local` từ `.env.example` và cấu hình:
 4. Thêm các biến môi trường ở phần **Project Settings → Environment Variables**.
 5. Deploy, sau đó đặt tên miền thật và cập nhật `NEXT_PUBLIC_SITE_URL`.
 
-## Nội dung cần Bee System xác nhận trước khi công khai
+## Nội dung cần xác nhận trước khi công khai
 
 - Logo gốc dạng SVG hoặc PNG nền trong suốt. Ảnh trong `brand-reference` là phiên bản trang trí Quốc khánh, không dùng làm logo chính.
 - Email, hotline, địa chỉ và người phụ trách tiếp nhận liên hệ.
