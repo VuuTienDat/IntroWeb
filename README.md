@@ -2,7 +2,7 @@
 
 Website doanh nghiệp nhiều trang dành cho Bee System Việt Nam, xây dựng bằng Next.js và TypeScript để triển khai trên Vercel.
 
-Trang quản trị nội bộ nằm tại `/admin` và không được liên kết trên giao diện công khai. Admin có thể quản lý bài viết, ảnh đại diện và nội dung hero trang chủ bằng Supabase.
+Trang quản trị nội bộ nằm tại `/admin` và không được liên kết trên giao diện công khai. Admin có thể quản lý bài viết, dự án, ảnh và nội dung hero trang chủ bằng Supabase. Dự án nổi bật được đồng bộ tự động ra trang chủ, danh sách `/du-an` và trang chi tiết.
 
 ## Chạy trên máy cá nhân
 

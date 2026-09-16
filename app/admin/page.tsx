@@ -4,6 +4,7 @@ import { AdminLogin } from "@/components/admin/admin-login";
 import { AdminSignOut } from "@/components/admin/admin-sign-out";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { defaultHomepageContent, type HomepageContent } from "@/lib/homepage";
+import type { Project } from "@/lib/projects";
 
 export const metadata: Metadata = {
   title: "Quản trị nội dung",
@@ -26,13 +27,14 @@ export default async function AdminPage() {
     );
   }
 
-  const [{ data: posts, error }, { data: homepage }] = await Promise.all([
+  const [{ data: posts, error }, { data: homepage }, { data: projects }] = await Promise.all([
     supabase.from("posts").select("*").order("updated_at", { ascending: false }),
     supabase.from("homepage_content").select("*").eq("id", "homepage").maybeSingle(),
+    supabase.from("projects").select("*").order("updated_at", { ascending: false }),
   ]);
   return (
     <main className="admin-page">
-      {error ? <section className="admin-auth-card"><h1>Không đọc được dữ liệu</h1><p>{error.message}</p></section> : <AdminDashboard initialPosts={(posts ?? []) as AdminPost[]} initialHomepage={(homepage ?? defaultHomepageContent) as HomepageContent} userId={user.id} userEmail={user.email ?? ""} />}
+      {error ? <section className="admin-auth-card"><h1>Không đọc được dữ liệu</h1><p>{error.message}</p></section> : <AdminDashboard initialPosts={(posts ?? []) as AdminPost[]} initialHomepage={(homepage ?? defaultHomepageContent) as HomepageContent} initialProjects={(projects ?? []) as Project[]} userId={user.id} userEmail={user.email ?? ""} />}
     </main>
   );
 }

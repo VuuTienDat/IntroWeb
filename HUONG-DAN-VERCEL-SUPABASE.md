@@ -16,6 +16,8 @@ Tài liệu này dành cho người lần đầu thiết lập. Bạn không c�
 - Nút **Lưu nháp**, **Đăng bài**, **Gỡ bài**. Gỡ bài chuyển về bản nháp, không xóa dữ liệu.
 - Tải ảnh tối đa 5 MB lên bucket `post-images`.
 - Tab **Trang chủ** cho phép admin sửa hero và tải ảnh tối đa 8 MB lên bucket `site-assets`.
+- Tab **Dự án** cho phép tạo, sửa, đăng, ẩn dự án, chọn dự án nổi bật và tải ảnh lên bucket `site-assets`.
+- Trang chủ tự lấy dự án được đánh dấu nổi bật; `/du-an` và trang chi tiết chỉ hiển thị dự án đã đăng.
 - SEO theo từng bài: slug, title, description, ảnh/alt, Article schema, canonical và sitemap.
 - RLS và chỉ mục PostgreSQL cho slug, danh sách bài đã đăng, chuyên mục và tìm kiếm.
 
@@ -34,11 +36,16 @@ Gói Free không yêu cầu mua tên miền và phù hợp để demo. Dự án 
 1. Trong Supabase, chọn **SQL Editor** → **New query**.
 2. Mở file `supabase/schema.sql` trong mã nguồn, sao chép toàn bộ nội dung vào ô query.
 3. Bấm **Run**.
-4. Thấy thông báo thành công là xong. Trong **Table Editor** sẽ có `posts` và `staff_members`; trong **Storage** sẽ có `post-images`.
+4. Thấy thông báo thành công là xong. Trong **Table Editor** sẽ có `posts`, `projects` và `staff_members`; trong **Storage** sẽ có `post-images` và `site-assets`.
 
 Không tắt RLS. File SQL đã tạo chính sách: khách chỉ đọc được bài đã xuất bản; nhân viên hợp lệ mới đọc/sửa được mọi bài.
 
-Nếu bạn đã chạy `schema.sql` của bản trước, không cần chạy lại toàn bộ. Chỉ mở và chạy một lần file `supabase/upgrade-homepage.sql` để thêm phần quản lý trang chủ và kho ảnh giao diện.
+Nếu bạn đã chạy `schema.sql` của bản trước, không cần chạy lại toàn bộ. Chạy lần lượt hai file sau, mỗi file đúng một lần:
+
+1. `supabase/upgrade-homepage.sql` để thêm phần quản lý trang chủ và kho ảnh giao diện.
+2. `supabase/upgrade-projects.sql` để thêm bảng, quyền truy cập và dữ liệu mẫu cho phần Dự án.
+
+Nếu `upgrade-homepage.sql` đã chạy thành công ở lần trước thì chỉ cần chạy `upgrade-projects.sql`.
 
 ## 4. Lấy hai biến Supabase cho Vercel
 
@@ -88,7 +95,7 @@ Việc này có hai phía: Google cấp Client ID/Secret, Supabase tiếp nhận
 
 ## 6. Khai báo biến môi trường trên Vercel
 
-Vercel → project `intro-web-pi` → **Settings** → **Environment Variables**. Điền:
+Vercel → project `intro-web` → **Settings** → **Environment Variables**. Điền:
 
 ```text
 NEXT_PUBLIC_SITE_URL=https://intro-web-pi.vercel.app
@@ -160,7 +167,19 @@ Không đổi slug của bài đã được Google lập chỉ mục nếu khôn
 5. Viết mô tả ảnh đúng nội dung để hỗ trợ SEO và người dùng trình đọc màn hình.
 6. Xem trước rồi bấm **Lưu trang chủ**. Trang công khai được làm mới ngay sau khi cache được xóa.
 
-## 10. Vì sao dùng PostgreSQL và các chỉ mục nào đã có
+## 10. Thêm và cập nhật dự án
+
+1. Mở trực tiếp `/admin`, đăng nhập rồi chọn tab **Dự án**.
+2. Chọn **+ Dự án mới**, nhập tên dự án, mô tả ngắn, nhóm dự án và trạng thái triển khai.
+3. Soạn nội dung chi tiết bằng cùng cú pháp tiêu đề, danh sách và trích dẫn như bài viết.
+4. Tải ảnh JPG, PNG, WebP hoặc GIF dưới 8 MB; nên dùng ảnh ngang tối thiểu khoảng 1200 × 800 px và điền mô tả ảnh.
+5. Chọn **Dự án nổi bật** nếu muốn dự án này xuất hiện trong khối dự án ở trang chủ.
+6. Điền tiêu đề và mô tả SEO, sau đó chọn **Lưu nháp** hoặc **Đăng dự án**.
+7. **Ẩn dự án** sẽ gỡ dự án khỏi trang công khai nhưng vẫn giữ dữ liệu trong CMS.
+
+Sau khi lưu/đăng, hệ thống tự xóa cache cho trang chủ, danh sách và trang chi tiết dự án. Không cần Redeploy Vercel mỗi lần sửa nội dung.
+
+## 11. Vì sao dùng PostgreSQL và các chỉ mục nào đã có
 
 PostgreSQL phù hợp vì dữ liệu bài viết có cấu trúc, cần lọc theo trạng thái/ngày/chuyên mục và cần phân quyền chắc chắn. Với quy mô website doanh nghiệp, tốc độ thường phụ thuộc nhiều vào chỉ mục và cache hơn việc chọn một cơ sở dữ liệu NoSQL.
 
@@ -171,8 +190,9 @@ File SQL tạo sẵn:
 - index `(category, published_at)` để lọc chuyên mục.
 - GIN full-text index cho tiêu đề + mô tả khi mở rộng tìm kiếm.
 - index `updated_at` cho danh sách quản trị.
+- partial index cho dự án đã đăng và index `featured` để lấy dự án nổi bật nhanh.
 
-## 11. Chạy và kiểm tra trên máy
+## 12. Chạy và kiểm tra trên máy
 
 ```bash
 cp .env.example .env.local
@@ -187,11 +207,12 @@ npm run lint
 npm run build
 ```
 
-## 12. Checklist sau khi deploy
+## 13. Checklist sau khi deploy
 
 - `/admin` đăng nhập được và tài khoản lạ bị từ chối.
 - Navbar và footer công khai không có nút quản trị.
 - Admin đổi được ảnh/nội dung hero từ tab Trang chủ.
+- Admin tạo, sửa, đăng/ẩn dự án và chọn dự án nổi bật từ tab Dự án.
 - Lưu nháp không xuất hiện ở `/kien-thuc`.
 - Đăng bài tạo đúng URL; gỡ bài làm URL đó không còn công khai.
 - Ảnh tải lên hiển thị và có alt text.
@@ -199,7 +220,7 @@ npm run build
 - `https://intro-web-pi.vercel.app/sitemap.xml` chỉ có bài đã đăng.
 - Khi có tên miền thật, đổi Site URL/Redirect URLs ở Supabase, Google và các biến Vercel rồi Redeploy.
 
-## 13. Tài liệu chính thức
+## 14. Tài liệu chính thức
 
 - Supabase: [Google login](https://supabase.com/docs/guides/auth/social-login/auth-google)
 - Supabase: [Server-side auth với Next.js](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)

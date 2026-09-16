@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Check, MoveRight } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { MotionRuntime } from "@/components/motion-runtime";
 import { getHomepageContent } from "@/lib/homepage";
+import { getProjects } from "@/lib/projects";
 import { company, siteUrl } from "@/lib/site";
 import { insights, processSteps, projectHighlights, services, strengths } from "./data";
 
@@ -31,7 +32,8 @@ const shiftRows = [
 export const revalidate = 300;
 
 export default async function Home() {
-  const homepage = await getHomepageContent();
+  const [homepage, projects] = await Promise.all([getHomepageContent(), getProjects()]);
+  const featuredProject = projects.find((project) => project.featured) ?? projects[0];
   return (
     <main>
       <MotionRuntime />
@@ -116,19 +118,23 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="section section-project" data-reveal>
+      {featuredProject ? <section className="section section-project" data-reveal>
         <div className="shell project-layout">
           <div className="project-copy">
-            <p className="eyebrow eyebrow-light">Sản phẩm đang phát triển</p>
-            <h2>Hệ thống xếp lịch điều dưỡng theo nhiều mức ưu tiên.</h2>
-            <p>Giải pháp hỗ trợ phân bổ ca trực, cân bằng khối lượng công việc và xử lý các yêu cầu có thể nới lỏng bằng cơ chế điểm phạt.</p>
-            <Link href="/du-an/he-thong-xep-lich" className="button button-white">Xem bài toán và cách làm <ArrowUpRight size={17} /></Link>
+            <p className="eyebrow eyebrow-light">{featuredProject.project_stage}</p>
+            <h2>{featuredProject.title}</h2>
+            <p>{featuredProject.summary}</p>
+            <Link href={`/du-an/${featuredProject.slug}`} className="button button-white">Xem bài toán và cách làm <ArrowUpRight size={17} /></Link>
           </div>
           <div className="project-panel">
-            <div className="project-panel-head"><span>Scheduling workspace</span><span className="status-pill">Đang phát triển</span></div>
-            <div className="project-calendar" aria-hidden="true">
-              {Array.from({ length: 24 }).map((_, index) => <span key={index} className={index % 7 === 2 || index % 9 === 0 ? "active" : ""} />)}
-            </div>
+            <div className="project-panel-head"><span>{featuredProject.category}</span><span className="status-pill">{featuredProject.project_stage}</span></div>
+            {featuredProject.image_url ? (
+              <div className="project-panel-photo"><img src={featuredProject.image_url} alt={featuredProject.image_alt || featuredProject.title} width="900" height="620" /></div>
+            ) : (
+              <div className="project-calendar" aria-hidden="true">
+                {Array.from({ length: 24 }).map((_, index) => <span key={index} className={index % 7 === 2 || index % 9 === 0 ? "active" : ""} />)}
+              </div>
+            )}
             <div className="project-stats">
               {projectHighlights.map((item) => {
                 const Icon = item.icon;
@@ -137,7 +143,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> : null}
 
       <section className="section" data-reveal>
         <div className="shell">

@@ -4,7 +4,9 @@ import { ChangeEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { HomepageEditor } from "@/components/admin/homepage-editor";
+import { ProjectEditor } from "@/components/admin/project-editor";
 import type { HomepageContent } from "@/lib/homepage";
+import type { Project } from "@/lib/projects";
 
 export type AdminPost = {
   id: string;
@@ -46,9 +48,10 @@ function slugify(value: string) {
     .toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-export function AdminDashboard({ initialPosts, initialHomepage, userId, userEmail }: {
+export function AdminDashboard({ initialPosts, initialHomepage, initialProjects, userId, userEmail }: {
   initialPosts: AdminPost[];
   initialHomepage: HomepageContent;
+  initialProjects: Project[];
   userId: string;
   userEmail: string;
 }) {
@@ -58,7 +61,7 @@ export function AdminDashboard({ initialPosts, initialHomepage, userId, userEmai
   const [query, setQuery] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const [section, setSection] = useState<"homepage" | "posts">("homepage");
+  const [section, setSection] = useState<"homepage" | "posts" | "projects">("homepage");
 
   const visiblePosts = useMemo(() => {
     const keyword = query.trim().toLowerCase();
@@ -179,11 +182,12 @@ export function AdminDashboard({ initialPosts, initialHomepage, userId, userEmai
         <div className="admin-topbar-actions">
           <button className={section === "homepage" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("homepage")}>Trang chủ</button>
           <button className={section === "posts" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("posts")}>Bài viết</button>
+          <button className={section === "projects" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("projects")}>Dự án</button>
           <button className="admin-secondary-button" onClick={() => { selectPost(); setSection("posts"); }}>+ Bài viết mới</button>
           <button className="admin-secondary-button" onClick={signOut}>Đăng xuất</button>
         </div>
       </header>
-      {section === "homepage" ? <HomepageEditor initialContent={initialHomepage} userId={userId} /> : (
+      {section === "homepage" ? <HomepageEditor initialContent={initialHomepage} userId={userId} /> : section === "projects" ? <ProjectEditor initialProjects={initialProjects} userId={userId} /> : (
       <div className="admin-layout">
         <aside className="admin-sidebar">
           <label>Tìm bài<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tiêu đề, slug…" /></label>
