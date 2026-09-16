@@ -49,7 +49,7 @@ const structuredData = {
       description: service.description,
       provider: { "@id": `${siteUrl}/#organization`, name: company.name },
       areaServed: { "@type": "Country", name: "Việt Nam" },
-      url: `${siteUrl}/dich-vu`,
+      url: `${siteUrl}/dich-vu#${service.slug}`,
     })),
     {
       "@type": "FAQPage",
@@ -82,7 +82,7 @@ export default function ServicesPage() {
           {services.map((service) => {
             const Icon = service.icon;
             return (
-              <article key={service.number} className="service-card">
+              <article id={service.slug} key={service.number} className="service-card anchor-target">
                 <div className="service-topline"><span>{service.number}</span><Icon size={24} aria-hidden="true" /></div>
                 <h2>{service.title}</h2>
                 <p>{service.description}</p>

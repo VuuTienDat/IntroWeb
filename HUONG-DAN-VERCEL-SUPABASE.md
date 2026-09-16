@@ -47,6 +47,8 @@ Nếu bạn đã chạy `schema.sql` của bản trước, không cần chạy l
 
 Nếu `upgrade-homepage.sql` đã chạy thành công ở lần trước thì chỉ cần chạy `upgrade-projects.sql`.
 
+Nếu bạn cũng đã chạy `upgrade-projects.sql` ở bản cũ, chỉ chạy thêm `supabase/upgrade-project-stages.sql`. File này không xóa dữ liệu; nó đổi “Đang phát triển” thành “Đang triển khai” và cập nhật giá trị mặc định.
+
 ## 4. Lấy hai biến Supabase cho Vercel
 
 Trong Supabase vào **Project Settings** → **API** (một số giao diện ghi **Data API / API Keys**) và sao chép:
@@ -170,7 +172,7 @@ Không đổi slug của bài đã được Google lập chỉ mục nếu khôn
 ## 10. Thêm và cập nhật dự án
 
 1. Mở trực tiếp `/admin`, đăng nhập rồi chọn tab **Dự án**.
-2. Chọn **+ Dự án mới**, nhập tên dự án, mô tả ngắn, nhóm dự án và trạng thái triển khai.
+2. Chọn **+ Dự án mới**, nhập tên dự án, mô tả ngắn và nhóm dự án. Ở **Giai đoạn dự án**, chọn một trong ba giá trị: **Đã hoàn thành**, **Đang triển khai** hoặc **Đang nghiên cứu**.
 3. Soạn nội dung chi tiết bằng cùng cú pháp tiêu đề, danh sách và trích dẫn như bài viết.
 4. Tải ảnh JPG, PNG, WebP hoặc GIF dưới 8 MB; nên dùng ảnh ngang tối thiểu khoảng 1200 × 800 px và điền mô tả ảnh.
 5. Chọn **Dự án nổi bật** nếu muốn dự án này xuất hiện trong khối dự án ở trang chủ.
@@ -178,6 +180,8 @@ Không đổi slug của bài đã được Google lập chỉ mục nếu khôn
 7. **Ẩn dự án** sẽ gỡ dự án khỏi trang công khai nhưng vẫn giữ dữ liệu trong CMS.
 
 Sau khi lưu/đăng, hệ thống tự xóa cache cho trang chủ, danh sách và trang chi tiết dự án. Không cần Redeploy Vercel mỗi lần sửa nội dung.
+
+Trang `/du-an` tự chia dự án thành ba nhóm theo giai đoạn. Menu **Dự án** trên thanh điều hướng cũng dẫn thẳng đến từng nhóm này.
 
 ## 11. Vì sao dùng PostgreSQL và các chỉ mục nào đã có
 

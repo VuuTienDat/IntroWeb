@@ -4,6 +4,8 @@ Website doanh nghiệp nhiều trang dành cho Bee System Việt Nam, xây dựn
 
 Trang quản trị nội bộ nằm tại `/admin` và không được liên kết trên giao diện công khai. Admin có thể quản lý bài viết, dự án, ảnh và nội dung hero trang chủ bằng Supabase. Dự án nổi bật được đồng bộ tự động ra trang chủ, danh sách `/du-an` và trang chi tiết.
 
+Trang dự án dùng ba giai đoạn thống nhất: **Đã hoàn thành**, **Đang triển khai** và **Đang nghiên cứu**. Nếu database cũ còn giá trị “Đang phát triển”, chạy `supabase/upgrade-project-stages.sql` một lần trong SQL Editor.
+
 ## Chạy trên máy cá nhân
 
 ```bash
@@ -40,3 +42,5 @@ Tạo `.env.local` từ `.env.example` và cấu hình:
 - Tên khách hàng, phạm vi dự án và số liệu hiệu quả được phép công bố.
 
 Xem hướng dẫn từng bước tại [HUONG-DAN-VERCEL-SUPABASE.md](./HUONG-DAN-VERCEL-SUPABASE.md).
+
+Nguồn ảnh chụp thật sử dụng trong giao diện được ghi tại [docs/IMAGE-CREDITS.md](./docs/IMAGE-CREDITS.md).

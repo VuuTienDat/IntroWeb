@@ -55,7 +55,7 @@ export default async function InsightsPage() {
                     loading="lazy"
                   />
                 </div>
-              ) : <div className="insight-visual insight-image"><Image src={["/media/bee-nursing-workflow.webp", "/media/bee-human-care.webp", "/media/bee-care-team.webp"][index % 3]} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" /></div>}
+              ) : <div className="insight-visual insight-image"><Image src={["/media/clinical-technology-real.webp", "/media/health-professional-real.webp", "/media/hospital-operations-real.webp"][index % 3]} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" /></div>}
               <div className="insight-meta"><span>{article.category}</span><span>{article.readTime}</span></div>
               <h2>{article.title}</h2>
               <p>{article.excerpt}</p>

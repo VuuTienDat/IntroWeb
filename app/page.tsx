@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Activity, ArrowRight, ArrowUpRight, HeartPulse, MoveRight, ShieldCheck, Sparkles } from "lucide-react";
 import { MotionRuntime } from "@/components/motion-runtime";
 import { getHomepageContent } from "@/lib/homepage";
-import { getProjects } from "@/lib/projects";
+import { getProjects, normalizeProjectStage } from "@/lib/projects";
 import { company, siteUrl } from "@/lib/site";
 import { insights, projectHighlights, services } from "./data";
 
@@ -19,8 +19,8 @@ const organizationSchema = {
 };
 
 const serviceMedia = [
-  { src: "/media/bee-nursing-workflow.webp", alt: "Điều dưỡng phối hợp công việc trên hệ thống số" },
-  { src: "/media/bee-human-care.webp", alt: "Điều dưỡng sử dụng công nghệ trong quá trình chăm sóc" },
+  { src: "/media/nursing-workflow-real.webp", alt: "Nhân viên y tế chuẩn bị cho ca làm việc tại bệnh viện" },
+  { src: "/media/clinical-technology-real.webp", alt: "Máy tính và ống nghe hỗ trợ công việc y tế số" },
 ];
 
 const audience = ["Phòng điều dưỡng", "Khối vận hành", "Ban công nghệ", "Lãnh đạo cơ sở y tế"];
@@ -54,7 +54,7 @@ export default async function Home() {
               {homepage.hero_image_url ? (
                 <img src={homepage.hero_image_url} alt={homepage.hero_image_alt} width="1536" height="1024" />
               ) : (
-                <Image src="/media/bee-care-team.webp" alt="Đội ngũ y tế phối hợp công việc bằng giải pháp số" fill priority sizes="(max-width: 980px) 100vw, 58vw" />
+                <Image src="/media/care-team-real.webp" alt="Hai nhân viên y tế phối hợp trong môi trường lâm sàng" fill priority sizes="(max-width: 980px) 100vw, 58vw" />
               )}
               <div className="art-photo-wash" />
             </div>
@@ -109,7 +109,7 @@ export default async function Home() {
                     <div className="art-service-icon"><Icon size={23} /><span>{service.number}</span></div>
                     <h3>{service.title}</h3>
                     <p>{service.description}</p>
-                    <Link href="/dich-vu" aria-label={`Tìm hiểu ${service.title}`}><ArrowUpRight size={20} /></Link>
+                    <Link href={`/dich-vu#${service.slug}`} aria-label={`Tìm hiểu ${service.title}`}><ArrowUpRight size={20} /></Link>
                   </div>
                 </article>
               );
@@ -121,7 +121,7 @@ export default async function Home() {
       <section className="journey-section">
         <div className="shell journey-grid">
           <div className="journey-photo" data-reveal>
-            <Image src="/media/bee-nursing-workflow.webp" alt="Điều dưỡng phối hợp và theo dõi dữ liệu vận hành" fill sizes="(max-width: 980px) 100vw, 48vw" />
+            <Image src="/media/hospital-operations-real.webp" alt="Nhân viên y tế di chuyển thiết bị trong hành lang bệnh viện" fill sizes="(max-width: 980px) 100vw, 48vw" />
             <div className="journey-photo-caption"><Sparkles size={18} /><span>Thiết kế quanh nhịp làm việc thực tế</span></div>
           </div>
           <div className="journey-copy" data-reveal data-reveal-delay="2">
@@ -146,7 +146,7 @@ export default async function Home() {
           <div className="product-stage" data-reveal>
             <div className="product-stage-glow" aria-hidden="true" />
             <div className="product-window">
-              <div className="product-window-bar"><span><i /><i /><i /></span><strong>Bee Workforce</strong><em>{featuredProject.project_stage}</em></div>
+              <div className="product-window-bar"><span><i /><i /><i /></span><strong>Bee Workforce</strong><em>{normalizeProjectStage(featuredProject.project_stage)}</em></div>
               {featuredProject.image_url ? <div className="product-custom-image"><img src={featuredProject.image_url} alt={featuredProject.image_alt || featuredProject.title} width="1200" height="760" /></div> : <div className="product-board">
                 <div className="product-side"><b>B</b><span /><span /><span /><span /></div>
                 <div className="product-main">
@@ -169,7 +169,7 @@ export default async function Home() {
             <p>Chúng tôi ưu tiên trải nghiệm dễ hiểu, dữ liệu minh bạch và triển khai theo phạm vi có thể kiểm chứng.</p>
             <div className="human-values"><span>Rõ quy trình</span><span>Đúng dữ liệu</span><span>Dễ sử dụng</span></div>
           </div>
-          <div className="human-photo" data-reveal data-reveal-delay="2"><Image src="/media/bee-human-care.webp" alt="Công nghệ hỗ trợ điều dưỡng dành nhiều thời gian hơn cho người bệnh" fill sizes="(max-width: 900px) 100vw, 52vw" /></div>
+          <div className="human-photo" data-reveal data-reveal-delay="2"><Image src="/media/care-team-real.webp" alt="Đội ngũ y tế trao đổi trực tiếp trong quá trình làm việc" fill sizes="(max-width: 900px) 100vw, 52vw" /></div>
         </div>
       </section>
 
@@ -181,7 +181,7 @@ export default async function Home() {
           </div>
           <div className="editorial-grid">
             {insights.map((article, index) => {
-              const pictures = ["/media/bee-nursing-workflow.webp", "/media/bee-human-care.webp", "/media/bee-care-team.webp"];
+              const pictures = ["/media/clinical-technology-real.webp", "/media/health-professional-real.webp", "/media/hospital-operations-real.webp"];
               return <Link href={article.href} className={`editorial-card editorial-card-${index + 1}`} key={article.title} data-reveal>
                 <div className="editorial-image"><Image src={pictures[index]} alt="" fill sizes="(max-width: 800px) 100vw, 33vw" /></div>
                 <div className="editorial-overlay" />

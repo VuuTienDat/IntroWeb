@@ -3,10 +3,10 @@
 import { ChangeEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Project } from "@/lib/projects";
+import { normalizeProjectStage, projectStages, type Project } from "@/lib/projects";
 
 type EditableProject = Omit<Project, "id" | "created_at" | "updated_at"> & { id?: string };
-const emptyProject: EditableProject = { title: "", slug: "", summary: "", content: "", category: "Giải pháp y tế", project_stage: "Đang phát triển", image_url: null, image_alt: "", seo_title: "", seo_description: "", status: "draft", featured: false, published_at: null };
+const emptyProject: EditableProject = { title: "", slug: "", summary: "", content: "", category: "Giải pháp y tế", project_stage: "Đang triển khai", image_url: null, image_alt: "", seo_title: "", seo_description: "", status: "draft", featured: false, published_at: null };
 
 function slugify(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -56,11 +56,11 @@ export function ProjectEditor({ initialProjects, userId }: { initialProjects: Pr
   }
 
   return <div className="admin-layout">
-    <aside className="admin-sidebar"><button className="admin-primary-button admin-full-button" onClick={() => { setEditing({ ...emptyProject }); setMessage(""); }}>+ Dự án mới</button><label>Tìm dự án<input value={query} onChange={(e) => setQuery(e.target.value)} /></label><div className="admin-post-list">{visible.map((project) => <button key={project.id} className={editing.id === project.id ? "active" : ""} onClick={() => { setEditing({ ...project }); setMessage(""); }}><strong>{project.title}</strong><span>{project.status === "published" ? "Đang hiển thị" : "Bản nháp"}</span></button>)}</div></aside>
+    <aside className="admin-sidebar"><button className="admin-primary-button admin-full-button" onClick={() => { setEditing({ ...emptyProject }); setMessage(""); }}>+ Dự án mới</button><label>Tìm dự án<input value={query} onChange={(e) => setQuery(e.target.value)} /></label><div className="admin-post-list">{visible.map((project) => <button key={project.id} className={editing.id === project.id ? "active" : ""} onClick={() => { setEditing({ ...project, project_stage: normalizeProjectStage(project.project_stage) }); setMessage(""); }}><strong>{project.title}</strong><span>{project.status === "published" ? "Đang hiển thị" : "Bản nháp"} · {normalizeProjectStage(project.project_stage)}</span></button>)}</div></aside>
     <section className="admin-editor">
       <div className="admin-field-row"><label>Tên dự án *<input value={editing.title} onChange={(e) => { change("title", e.target.value); if (!editing.id) change("slug", slugify(e.target.value)); }} /></label><label>Slug *<input value={editing.slug} onChange={(e) => change("slug", slugify(e.target.value))} /></label></div>
       <label>Mô tả ngắn *<textarea rows={3} value={editing.summary} onChange={(e) => change("summary", e.target.value)} /></label>
-      <div className="admin-field-row"><label>Nhóm dự án<input value={editing.category} onChange={(e) => change("category", e.target.value)} /></label><label>Trạng thái triển khai<input value={editing.project_stage} onChange={(e) => change("project_stage", e.target.value)} /></label></div>
+      <div className="admin-field-row"><label>Nhóm dự án<input value={editing.category} onChange={(e) => change("category", e.target.value)} /></label><label>Giai đoạn dự án<select value={normalizeProjectStage(editing.project_stage)} onChange={(e) => change("project_stage", e.target.value)}>{projectStages.map((stage) => <option value={stage} key={stage}>{stage}</option>)}</select></label></div>
       <label>Nội dung dự án *<textarea className="admin-content-input" rows={18} value={editing.content} onChange={(e) => change("content", e.target.value)} placeholder={"## Bài toán\n\nNội dung…\n\n## Giải pháp\n\n- Hạng mục thứ nhất"} /></label>
       <div className="admin-field-row"><label>Ảnh dự án<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={uploadImage} /></label><label>Hoặc URL ảnh<input value={editing.image_url ?? ""} onChange={(e) => change("image_url", e.target.value)} /></label></div>
       <label>Mô tả ảnh<input value={editing.image_alt} onChange={(e) => change("image_alt", e.target.value)} /></label>

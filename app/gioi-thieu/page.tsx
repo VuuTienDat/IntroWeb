@@ -26,7 +26,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="page-section mission-section">
+      <section id="tam-nhin" className="page-section mission-section anchor-target">
         <div className="shell mission-layout">
           <div>
             <p className="eyebrow">Mục tiêu</p>
@@ -39,7 +39,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="page-section page-section-soft">
+      <section id="nguyen-tac" className="page-section page-section-soft anchor-target">
         <div className="shell">
           <SectionHeading eyebrow="Nguyên tắc làm việc" title="Từ quy trình thật đến sản phẩm sử dụng được." />
           <div className="simple-grid">

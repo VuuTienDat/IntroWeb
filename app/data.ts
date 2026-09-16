@@ -14,6 +14,7 @@ export const services = [
   {
     icon: CalendarRange,
     number: "01",
+    slug: "xep-lich-dieu-phoi",
     title: "Xếp lịch và điều phối điều dưỡng",
     description:
       "Hỗ trợ lập lịch nhiều ràng buộc, phân bổ ca trực và theo dõi mức độ cân bằng giữa các thành viên.",
@@ -22,6 +23,7 @@ export const services = [
   {
     icon: ClipboardCheck,
     number: "02",
+    slug: "so-hoa-quy-trinh",
     title: "Số hóa quy trình chăm sóc",
     description:
       "Chuyển biểu mẫu và quy trình phối hợp hằng ngày thành luồng công việc rõ ràng, dễ theo dõi và tổng hợp.",
@@ -30,6 +32,7 @@ export const services = [
   {
     icon: DatabaseZap,
     number: "03",
+    slug: "phan-mem-theo-yeu-cau",
     title: "Phần mềm y tế theo yêu cầu",
     description:
       "Phân tích nghiệp vụ, phát triển web app và kết nối dữ liệu theo phạm vi vận hành của từng đơn vị.",

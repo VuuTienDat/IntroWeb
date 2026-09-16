@@ -1,6 +1,16 @@
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "") ?? "";
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
+export const projectStages = ["Đã hoàn thành", "Đang triển khai", "Đang nghiên cứu"] as const;
+export type ProjectStage = (typeof projectStages)[number];
+
+export function normalizeProjectStage(stage: string): ProjectStage {
+  const value = stage.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/đ/g, "d");
+  if (value.includes("hoan thanh") || value.includes("da lam") || value.includes("nghiem thu")) return "Đã hoàn thành";
+  if (value.includes("nghien cuu") || value.includes("de xuat") || value.includes("y tuong")) return "Đang nghiên cứu";
+  return "Đang triển khai";
+}
+
 export type Project = {
   id: string;
   title: string;
@@ -27,7 +37,7 @@ export const fallbackProject: Project = {
   summary: "Tự động phân ca, cân bằng ca đêm và khối lượng công việc bằng mô hình ưu tiên nhiều mức.",
   content: "## Bài toán vận hành\n\nLịch trực cần đáp ứng số lượng nhân sự, kỹ năng và quy định của từng ca. Đồng thời, lịch vẫn phải giảm chênh lệch về ca đêm và tổng khối lượng giữa các thành viên.\n\n## Cách mô hình hóa\n\nNhững điều kiện không thể vi phạm được giữ thành ràng buộc bắt buộc. Các mong muốn có thể điều chỉnh được chuyển thành điểm phạt. Mức phạt tăng theo độ nghiêm trọng để hệ thống hiểu ưu tiên nào cần xử lý trước.\n\n## Thứ tự ưu tiên\n\n- Trước hết bảo đảm lịch hợp lệ và đủ người cho các ca cần thiết.\n- Ưu tiên giảm chênh lệch số ca đêm giữa các thành viên.\n- Tiếp theo cân bằng tổng khối lượng công việc.\n- Sau cùng giảm các sai lệch còn lại theo trọng số đã thống nhất.\n\n## Giá trị hướng tới\n\nNgười quản lý có thể tạo lịch nhanh hơn, nhìn thấy cảnh báo và hiểu nguyên nhân một lịch được đánh giá tốt hoặc cần điều chỉnh.",
   category: "Điều phối điều dưỡng",
-  project_stage: "Đang phát triển",
+  project_stage: "Đang triển khai",
   image_url: null,
   image_alt: "Giao diện hệ thống xếp lịch điều dưỡng Bee System",
   seo_title: "Hệ thống xếp lịch điều dưỡng",
