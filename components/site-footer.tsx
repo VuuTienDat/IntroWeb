@@ -4,6 +4,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="shell">
+        <div className="footer-statement"><span>Bee System</span><p>Công nghệ tốt bắt đầu từ việc hiểu con người đang vận hành nó.</p></div>
         <div className="footer-main">
           <div>
             <Link href="/" className="brand brand-light">

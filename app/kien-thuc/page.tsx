@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { getCmsPosts } from "@/lib/posts";
@@ -32,7 +33,7 @@ export default async function InsightsPage() {
 
   return (
     <main>
-      <section className="page-hero">
+      <section className="page-hero insight-page-hero">
         <div className="shell">
           <p className="eyebrow">Kiến thức</p>
           <h1>Kiến thức về chuyển đổi số y tế và quản lý điều dưỡng.</h1>
@@ -54,11 +55,7 @@ export default async function InsightsPage() {
                     loading="lazy"
                   />
                 </div>
-              ) : (
-                <div className={`insight-visual visual-${(index % 3) + 1}`} aria-hidden="true">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                </div>
-              )}
+              ) : <div className="insight-visual insight-image"><Image src={["/media/bee-nursing-workflow.webp", "/media/bee-human-care.webp", "/media/bee-care-team.webp"][index % 3]} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" /></div>}
               <div className="insight-meta"><span>{article.category}</span><span>{article.readTime}</span></div>
               <h2>{article.title}</h2>
               <p>{article.excerpt}</p>

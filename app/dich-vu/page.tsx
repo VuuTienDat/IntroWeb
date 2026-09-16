@@ -69,7 +69,7 @@ export default function ServicesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <section className="page-hero">
+      <section className="page-hero service-page-hero">
         <div className="shell">
           <p className="eyebrow">Giải pháp</p>
           <h1>Giải pháp phần mềm y tế được thiết kế quanh quy trình thực tế.</h1>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Activity, HeartPulse } from "lucide-react";
@@ -23,6 +24,6 @@ export default async function ProjectDetailPage({ params }: Props) {
   return <main>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     <section className="page-hero medical-page-hero"><div className="medical-orbit medical-orbit-one" aria-hidden="true"><HeartPulse /></div><div className="medical-orbit medical-orbit-two" aria-hidden="true"><Activity /></div><div className="shell"><p className="eyebrow">{project.category} · {project.project_stage}</p><h1>{project.title}</h1><p>{project.summary}</p></div></section>
-    <section className="page-section"><div className="shell article-layout"><article className="page-copy project-article"><nav className="breadcrumb"><Link href="/">Trang chủ</Link><span>/</span><Link href="/du-an">Dự án</Link><span>/</span><span>{project.title}</span></nav>{project.image_url ? <figure className="project-detail-cover"><img src={project.image_url} alt={project.image_alt} width="1200" height="720" /></figure> : null}<ArticleContent content={project.content} /></article><aside className="article-aside medical-aside"><p>Thông tin dự án</p><strong>{project.category}</strong><strong>{project.project_stage}</strong><strong>Bee System Việt Nam</strong></aside></div></section>
+    <section className="page-section"><div className="shell article-layout"><article className="page-copy project-article"><nav className="breadcrumb"><Link href="/">Trang chủ</Link><span>/</span><Link href="/du-an">Dự án</Link><span>/</span><span>{project.title}</span></nav><figure className="project-detail-cover">{project.image_url ? <img src={project.image_url} alt={project.image_alt} width="1200" height="720" /> : <Image src="/media/bee-nursing-workflow.webp" alt="Điều dưỡng phối hợp công việc trên hệ thống số" width={1536} height={1024} />}</figure><ArticleContent content={project.content} /></article><aside className="article-aside medical-aside"><p>Thông tin dự án</p><strong>{project.category}</strong><strong>{project.project_stage}</strong><strong>Bee System Việt Nam</strong></aside></div></section>
   </main>;
 }

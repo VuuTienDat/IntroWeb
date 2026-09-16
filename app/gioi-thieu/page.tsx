@@ -18,7 +18,7 @@ const principles = [
 export default function AboutPage() {
   return (
     <main>
-      <section className="page-hero">
+      <section className="page-hero about-page-hero">
         <div className="shell">
           <p className="eyebrow">Giới thiệu</p>
           <h1>Bee System Việt Nam xây phần mềm cho những công việc cần sự rõ ràng và tin cậy.</h1>

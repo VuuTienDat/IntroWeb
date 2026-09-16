@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { ArrowUpRight, Menu } from "lucide-react";
 
 const nav = [
   ["Giới thiệu", "/gioi-thieu"],
   ["Dịch vụ", "/dich-vu"],
   ["Dự án", "/du-an"],
   ["Kiến thức", "/kien-thuc"],
-  ["Liên hệ", "/lien-he"],
 ];
 
 export function SiteHeader() {
@@ -21,6 +20,7 @@ export function SiteHeader() {
           {nav.map(([label, href]) => (
             <Link key={href} href={href} className="nav-link">{label}</Link>
           ))}
+          <Link href="/lien-he" className="header-cta">Trao đổi dự án <ArrowUpRight size={16} /></Link>
         </nav>
         <details className="mobile-menu lg:hidden">
           <summary aria-label="Mở menu"><Menu size={24} aria-hidden="true" /></summary>
@@ -28,6 +28,7 @@ export function SiteHeader() {
             {nav.map(([label, href]) => (
               <Link key={href} href={href}>{label}</Link>
             ))}
+            <Link href="/lien-he">Liên hệ</Link>
           </nav>
         </details>
       </div>

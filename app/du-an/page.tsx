@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Activity, ArrowUpRight, HeartPulse, ShieldCheck } from "lucide-react";
 import { getProjects } from "@/lib/projects";
@@ -15,7 +16,7 @@ export default async function ProjectsPage() {
   const projects = await getProjects();
   return (
     <main>
-      <section className="page-hero medical-page-hero">
+      <section className="page-hero medical-page-hero project-page-hero">
         <div className="medical-orbit medical-orbit-one" aria-hidden="true"><HeartPulse /></div>
         <div className="medical-orbit medical-orbit-two" aria-hidden="true"><Activity /></div>
         <div className="shell project-hero-layout">
@@ -27,7 +28,7 @@ export default async function ProjectsPage() {
         <div className="shell">
           <div className="project-public-grid">
             {projects.map((project, index) => <Link href={`/du-an/${project.slug}`} className="project-public-card motion-card" key={project.id}>
-              {project.image_url ? <div className="project-public-image"><img src={project.image_url} alt={project.image_alt} width="900" height="560" /></div> : <div className={`project-medical-visual project-medical-${(index % 3) + 1}`} aria-hidden="true"><HeartPulse /><span>{String(index + 1).padStart(2, "0")}</span><i /><i /><i /></div>}
+              {project.image_url ? <div className="project-public-image"><img src={project.image_url} alt={project.image_alt} width="900" height="560" /></div> : <div className="project-public-image"><Image src={["/media/bee-nursing-workflow.webp", "/media/bee-care-team.webp", "/media/bee-human-care.webp"][index % 3]} alt="" fill sizes="(max-width: 700px) 100vw, 50vw" /><span className="project-image-index">{String(index + 1).padStart(2, "0")}</span></div>}
               <div className="project-public-copy"><div className="project-card-meta"><span>{project.category}</span><span>{project.project_stage}</span></div><h2>{project.title}</h2><p>{project.summary}</p><span className="text-link">Xem dự án <ArrowUpRight size={17} /></span></div>
             </Link>)}
           </div>
