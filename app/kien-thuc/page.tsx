@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { getCmsPosts } from "@/lib/wordpress";
+import { getCmsPosts } from "@/lib/posts";
 import { insights } from "../data";
 
 export const metadata: Metadata = {

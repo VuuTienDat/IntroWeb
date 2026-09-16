@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/site";
-import { getCmsPosts } from "@/lib/wordpress";
+import { getCmsPosts } from "@/lib/posts";
 
 export const revalidate = 300;
 

@@ -5,8 +5,8 @@ Website doanh nghiệp nhiều trang dành cho Bee System Việt Nam, xây dựn
 ## Chạy trên máy cá nhân
 
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 Mở `http://localhost:3000`.
@@ -16,8 +16,9 @@ Mở `http://localhost:3000`.
 Tạo `.env.local` từ `.env.example` và cấu hình:
 
 - `NEXT_PUBLIC_SITE_URL`: tên miền chính thức của website.
-- `NEXT_PUBLIC_APP_URL`: URL web app có đăng nhập Google.
-- `WORDPRESS_API_URL`: URL REST API của WordPress, ví dụ `https://cms.example.com/wp-json/wp/v2`.
+- `NEXT_PUBLIC_APP_URL`: URL trang quản trị, ví dụ `https://intro-web-pi.vercel.app/admin`.
+- `NEXT_PUBLIC_SUPABASE_URL`: Project URL của Supabase.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Publishable/anon key của Supabase; không dùng service role key.
 - `CONTACT_WEBHOOK_URL`: webhook nhận biểu mẫu liên hệ.
 - `CONTACT_WEBHOOK_SECRET`: mã bí mật Bearer cho webhook nếu hệ thống nhận yêu cầu sử dụng.
 
@@ -33,7 +34,7 @@ Tạo `.env.local` từ `.env.example` và cấu hình:
 
 - Logo gốc dạng SVG hoặc PNG nền trong suốt. Ảnh trong `brand-reference` là phiên bản trang trí Quốc khánh, không dùng làm logo chính.
 - Email, hotline, địa chỉ và người phụ trách tiếp nhận liên hệ.
-- URL web app và thông tin cấu hình Google OAuth.
+- Email Google của nhân viên được phép vào trang quản trị.
 - Tên khách hàng, phạm vi dự án và số liệu hiệu quả được phép công bố.
 
-Xem hướng dẫn đầy đủ tại [HUONG-DAN-VERCEL-WORDPRESS.md](./HUONG-DAN-VERCEL-WORDPRESS.md).
+Xem hướng dẫn từng bước tại [HUONG-DAN-VERCEL-SUPABASE.md](./HUONG-DAN-VERCEL-SUPABASE.md).

@@ -5,7 +5,7 @@ export const siteUrl = (
   (vercelHost ? `https://${vercelHost}` : "https://bee-system-vietnam-demo.vudat090305.chatgpt.site")
 ).replace(/\/$/, "");
 
-export const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "/ung-dung";
+export const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "/admin";
 
 export const company = {
   name: "Bee System Việt Nam",

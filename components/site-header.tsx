@@ -25,7 +25,7 @@ export function SiteHeader() {
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
           <a href={appUrl} className="button button-dark">
-            Đăng nhập <ArrowUpRight size={16} aria-hidden="true" />
+            Quản trị <ArrowUpRight size={16} aria-hidden="true" />
           </a>
         </div>
         <details className="mobile-menu lg:hidden">
@@ -35,7 +35,7 @@ export function SiteHeader() {
               <Link key={href} href={href}>{label}</Link>
             ))}
             <a href={appUrl} className="mobile-app-link">
-              Mở web app <ArrowUpRight size={16} />
+              Quản trị bài viết <ArrowUpRight size={16} />
             </a>
           </nav>
         </details>

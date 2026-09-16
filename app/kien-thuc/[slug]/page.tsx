@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleByline } from "@/components/article-byline";
+import { ArticleContent } from "@/components/article-content";
 import { company, siteUrl } from "@/lib/site";
-import { getCmsPostBySlug } from "@/lib/wordpress";
+import { getCmsPostBySlug } from "@/lib/posts";
 
 export const revalidate = 300;
 
@@ -33,10 +34,10 @@ export async function generateMetadata({
   }
 
   const canonical = `/kien-thuc/${post.slug}`;
-  const description = post.excerpt.slice(0, 158);
+  const description = post.seoDescription.slice(0, 158);
 
   return {
-    title: post.title,
+    title: post.seoTitle,
     description,
     alternates: { canonical },
     robots: { index: true, follow: true },
@@ -136,7 +137,7 @@ export default async function CmsArticlePage({ params }: ArticlePageProps) {
             />
             {post.image ? (
               <figure className="article-cover">
-                {/* WordPress supplies the public media URL and dimensions. */}
+                {/* Supabase Storage supplies the public media URL. */}
                 <img
                   src={post.image.src}
                   alt={post.image.alt}
@@ -146,7 +147,7 @@ export default async function CmsArticlePage({ params }: ArticlePageProps) {
                 />
               </figure>
             ) : null}
-            <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+            <ArticleContent content={post.content} />
             <div className="article-cta">
               <strong>Đang cân nhắc một quy trình cần số hóa?</strong>
               <p>Gửi bối cảnh vận hành để Bee System cùng làm rõ phạm vi phù hợp.</p>
