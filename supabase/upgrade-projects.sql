@@ -7,6 +7,7 @@ create table if not exists public.projects (
   content text not null,
   category text not null default 'Giải pháp y tế',
   project_stage text not null default 'Đang triển khai',
+  app_url text,
   image_url text,
   image_alt text not null,
   seo_title text not null,

@@ -11,5 +11,8 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) return NextResponse.redirect(new URL(next, url.origin));
   }
-  return NextResponse.redirect(new URL("/admin?error=auth", url.origin));
+  const errorTarget = next.startsWith("/ung-dung")
+    ? `${next}${next.includes("?") ? "&" : "?"}error=auth`
+    : "/admin?error=auth";
+  return NextResponse.redirect(new URL(errorTarget, url.origin));
 }

@@ -26,6 +26,16 @@ export type AdminPost = {
   updated_at: string;
 };
 
+export type ProjectViewer = {
+  user_id: string;
+  project_slug: string;
+  first_viewed_at: string;
+  last_viewed_at: string;
+  view_count: number;
+  customer_accounts: { email: string | null; display_name: string | null; avatar_url: string | null } | null;
+  projects: { title: string } | null;
+};
+
 type EditablePost = Omit<AdminPost, "id" | "created_at" | "updated_at"> & { id?: string };
 
 const emptyPost: EditablePost = {
@@ -48,10 +58,11 @@ function slugify(value: string) {
     .toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-export function AdminDashboard({ initialPosts, initialHomepage, initialProjects, userId, userEmail }: {
+export function AdminDashboard({ initialPosts, initialHomepage, initialProjects, initialViewers, userId, userEmail }: {
   initialPosts: AdminPost[];
   initialHomepage: HomepageContent;
   initialProjects: Project[];
+  initialViewers: ProjectViewer[];
   userId: string;
   userEmail: string;
 }) {
@@ -61,7 +72,7 @@ export function AdminDashboard({ initialPosts, initialHomepage, initialProjects,
   const [query, setQuery] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const [section, setSection] = useState<"homepage" | "posts" | "projects">("homepage");
+  const [section, setSection] = useState<"homepage" | "posts" | "projects" | "visitors">("homepage");
 
   const visiblePosts = useMemo(() => {
     const keyword = query.trim().toLowerCase();
@@ -183,11 +194,25 @@ export function AdminDashboard({ initialPosts, initialHomepage, initialProjects,
           <button className={section === "homepage" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("homepage")}>Trang chủ</button>
           <button className={section === "posts" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("posts")}>Bài viết</button>
           <button className={section === "projects" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("projects")}>Dự án</button>
+          <button className={section === "visitors" ? "admin-primary-button" : "admin-secondary-button"} onClick={() => setSection("visitors")}>Khách đã xem</button>
           <button className="admin-secondary-button" onClick={() => { selectPost(); setSection("posts"); }}>+ Bài viết mới</button>
           <button className="admin-secondary-button" onClick={signOut}>Đăng xuất</button>
         </div>
       </header>
-      {section === "homepage" ? <HomepageEditor initialContent={initialHomepage} userId={userId} /> : section === "projects" ? <ProjectEditor initialProjects={initialProjects} userId={userId} /> : (
+      {section === "homepage" ? <HomepageEditor initialContent={initialHomepage} userId={userId} /> : section === "projects" ? <ProjectEditor initialProjects={initialProjects} userId={userId} /> : section === "visitors" ? (
+        <section className="admin-viewers-panel">
+          <header><div><span className="admin-kicker">Quyền truy cập dự án</span><h2>Khách đã đăng nhập Google</h2></div><p>Chỉ gồm người đã chủ động đồng ý đăng nhập tại cổng ứng dụng.</p></header>
+          {initialViewers.length ? <div className="admin-viewers-table" role="table" aria-label="Danh sách khách đã xem dự án">
+            <div className="admin-viewers-row admin-viewers-head" role="row"><span>Khách hàng</span><span>Dự án</span><span>Lần gần nhất</span><span>Lượt</span></div>
+            {initialViewers.map((viewer) => <div className="admin-viewers-row" role="row" key={`${viewer.user_id}-${viewer.project_slug}`}>
+              <div className="viewer-identity">{viewer.customer_accounts?.avatar_url ? <img src={viewer.customer_accounts.avatar_url} alt="" width="38" height="38" /> : <i>{(viewer.customer_accounts?.email ?? "K").slice(0, 1).toUpperCase()}</i>}<span><strong>{viewer.customer_accounts?.display_name || "Khách Google"}</strong><small>{viewer.customer_accounts?.email || "Không có email"}</small></span></div>
+              <span><strong>{viewer.projects?.title || viewer.project_slug}</strong><small>{viewer.project_slug}</small></span>
+              <time dateTime={viewer.last_viewed_at}>{new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(new Date(viewer.last_viewed_at))}</time>
+              <b>{viewer.view_count}</b>
+            </div>)}
+          </div> : <div className="admin-empty-viewers"><strong>Chưa có lượt truy cập được ghi nhận.</strong><p>Chạy file <code>supabase/upgrade-project-access.sql</code>, sau đó dữ liệu sẽ xuất hiện khi khách đăng nhập Google từ một dự án.</p></div>}
+        </section>
+      ) : (
       <div className="admin-layout">
         <aside className="admin-sidebar">
           <label>Tìm bài<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tiêu đề, slug…" /></label>

@@ -4,7 +4,9 @@ Website doanh nghiệp nhiều trang dành cho Bee System Việt Nam, xây dựn
 
 Trang quản trị nội bộ nằm tại `/admin` và không được liên kết trên giao diện công khai. Admin có thể quản lý bài viết, dự án, ảnh và nội dung hero trang chủ bằng Supabase. Dự án nổi bật được đồng bộ tự động ra trang chủ, danh sách `/du-an` và trang chi tiết.
 
-Trang dự án dùng ba giai đoạn thống nhất: **Đã hoàn thành**, **Đang triển khai** và **Đang nghiên cứu**. Nếu database cũ còn giá trị “Đang phát triển”, chạy `supabase/upgrade-project-stages.sql` một lần trong SQL Editor.
+Trang dự án dùng ba giai đoạn thống nhất: **Đã hoàn thành**, **Đang triển khai** và **Đang nghiên cứu**. Mỗi dự án có thể nhận một URL web app riêng. Khách bấm mở ứng dụng sẽ qua cổng Google OAuth; hệ thống chỉ lưu hồ sơ truy cập tối thiểu sau khi họ chủ động đăng nhập.
+
+Nếu database đã được tạo bằng bản cũ, chạy `supabase/upgrade-project-access.sql` một lần trong SQL Editor để thêm URL ứng dụng và lịch sử truy cập. File này cũng an toàn khi chạy sau `upgrade-project-stages.sql`.
 
 ## Chạy trên máy cá nhân
 
@@ -20,7 +22,7 @@ Mở `http://localhost:3000`.
 Tạo `.env.local` từ `.env.example` và cấu hình:
 
 - `NEXT_PUBLIC_SITE_URL`: tên miền chính thức của website.
-- `NEXT_PUBLIC_APP_URL`: URL trang quản trị, ví dụ `https://intro-web-pi.vercel.app/admin`.
+- `NEXT_PUBLIC_APP_URL`: URL web app mặc định dành cho khách hàng, ví dụ `https://app.beesystem.vn`; không nhập URL `/admin`.
 - `NEXT_PUBLIC_SUPABASE_URL`: Project URL của Supabase.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Publishable/anon key của Supabase; không dùng service role key.
 - `CONTACT_WEBHOOK_URL`: webhook nhận biểu mẫu liên hệ.

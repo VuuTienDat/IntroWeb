@@ -5,7 +5,8 @@ export const siteUrl = (
   (vercelHost ? `https://${vercelHost}` : "https://bee-system-vietnam-demo.vudat090305.chatgpt.site")
 ).replace(/\/$/, "");
 
-export const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "/admin";
+// URL của web app dành cho khách hàng. Trang quản trị nội bộ vẫn luôn là /admin.
+export const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "");
 
 export const company = {
   name: "Bee System Việt Nam",

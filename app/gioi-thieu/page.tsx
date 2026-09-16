@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
-import { CheckCircle2, Compass, HeartHandshake } from "lucide-react";
-import { SectionHeading } from "@/components/section-heading";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Compass,
+  HeartHandshake,
+  MoveUpRight,
+} from "lucide-react";
+import { MotionRuntime } from "@/components/motion-runtime";
 
 export const metadata: Metadata = {
   title: "Giới thiệu Bee System Việt Nam",
@@ -10,44 +18,119 @@ export const metadata: Metadata = {
 };
 
 const principles = [
-  [Compass, "Hiểu đúng bài toán", "Làm rõ người sử dụng, dữ liệu và điểm nghẽn trước khi xác định phạm vi phần mềm."],
-  [HeartHandshake, "Thiết kế cùng người dùng", "Ưu tiên thao tác dễ hiểu và phản hồi từ những người trực tiếp thực hiện công việc."],
-  [CheckCircle2, "Triển khai có kiểm chứng", "Bắt đầu bằng phạm vi vừa đủ, đo kết quả rồi mới mở rộng sang quy trình tiếp theo."],
+  {
+    icon: Compass,
+    number: "01",
+    title: "Hiểu công việc thật",
+    description: "Quan sát vai trò, dữ liệu và điểm nghẽn trước khi nói tới tính năng.",
+  },
+  {
+    icon: HeartHandshake,
+    number: "02",
+    title: "Thiết kế cùng người dùng",
+    description: "Để người trực tiếp vận hành góp ý từ những phiên bản đầu tiên.",
+  },
+  {
+    icon: CheckCircle2,
+    number: "03",
+    title: "Mở rộng có kiểm chứng",
+    description: "Chạy phạm vi vừa đủ, đo kết quả rồi mới phát triển bước tiếp theo.",
+  },
 ] as const;
 
 export default function AboutPage() {
   return (
-    <main>
-      <section className="page-hero about-page-hero">
-        <div className="shell">
-          <p className="eyebrow">Giới thiệu</p>
-          <h1>Bee System Việt Nam xây phần mềm cho những công việc cần sự rõ ràng và tin cậy.</h1>
-          <p>Chúng tôi tập trung vào các bài toán vận hành trong y tế và điều dưỡng, nơi quy trình, con người và dữ liệu cần được kết nối mạch lạc.</p>
+    <main className="about-art-direction">
+      <MotionRuntime />
+
+      <section className="about-art-hero">
+        <div className="about-art-glow" aria-hidden="true" />
+        <div className="shell about-art-grid">
+          <div className="about-art-copy" data-reveal>
+            <p className="art-kicker art-kicker-dark"><span /> Về Bee System</p>
+            <h1>Công nghệ để đội ngũ y tế <em>làm việc nhẹ hơn.</em></h1>
+            <p className="about-art-lead">
+              Chúng tôi xây phần mềm quanh nhịp làm việc thật của y tế và điều dưỡng — rõ việc, liền dữ liệu, dễ sử dụng.
+            </p>
+            <div className="hero-actions">
+              <Link href="/dich-vu" className="button button-art-primary">Khám phá giải pháp <ArrowRight size={18} /></Link>
+              <Link href="/lien-he" className="text-link">Trao đổi cùng Bee System <MoveUpRight size={18} /></Link>
+            </div>
+          </div>
+
+          <div className="about-art-visual" data-reveal data-reveal-delay="2">
+            <div className="about-art-photo">
+              <Image
+                src="/media/care-team-real.webp"
+                alt="Đội ngũ y tế trao đổi trong môi trường làm việc lâm sàng"
+                fill
+                priority
+                sizes="(max-width: 900px) 100vw, 50vw"
+              />
+              <div className="about-art-photo-overlay" />
+              <div className="about-photo-label"><span>Y tế</span><i /> <span>Công nghệ</span></div>
+            </div>
+            <div className="about-quote-card">
+              <small>Điểm bắt đầu</small>
+              <strong>Không phải một danh sách tính năng.</strong>
+              <span>Mà là một công việc đang cần được làm tốt hơn.</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="shell about-focus-strip" data-reveal>
+          <div><span>01</span><strong>Y tế &amp; điều dưỡng</strong></div>
+          <div><span>02</span><strong>Quy trình vận hành</strong></div>
+          <div><span>03</span><strong>Sản phẩm dễ dùng</strong></div>
         </div>
       </section>
 
-      <section id="tam-nhin" className="page-section mission-section anchor-target">
-        <div className="shell mission-layout">
-          <div>
-            <p className="eyebrow">Mục tiêu</p>
-            <h2>Trở thành doanh nghiệp số 1 về giải pháp công nghệ tối ưu cho y tế và điều dưỡng tại Việt Nam.</h2>
+      <section id="tam-nhin" className="about-story-section anchor-target">
+        <div className="shell about-story-grid">
+          <div className="about-story-heading" data-reveal>
+            <p className="art-kicker art-kicker-dark"><span /> Mục tiêu</p>
+            <h2>Đưa công nghệ vào đúng nơi đang gây áp lực.</h2>
           </div>
-          <div className="mission-copy">
-            <p>Bee System Việt Nam ra đời với mục tiêu đưa công nghệ vào đúng những quy trình đang gây áp lực cho đội ngũ chăm sóc và quản lý.</p>
-            <p>Thay vì bắt đầu bằng một danh sách tính năng, chúng tôi bắt đầu bằng câu hỏi: công việc nào đang lặp lại, dữ liệu nào khó theo dõi và quyết định nào cần được hỗ trợ tốt hơn?</p>
+          <div className="about-story-copy" data-reveal data-reveal-delay="2">
+            <p>
+              Bee System hướng tới trở thành đối tác công nghệ đáng tin cậy cho y tế và điều dưỡng tại Việt Nam.
+            </p>
+            <p>
+              Mỗi dự án bắt đầu bằng việc cùng đội ngũ vận hành làm rõ một điểm nghẽn, rồi biến nó thành giải pháp có thể dùng và cải tiến lâu dài.
+            </p>
+          </div>
+        </div>
+
+        <div className="shell about-story-media" data-reveal>
+          <div className="about-story-image">
+            <Image
+              src="/media/hospital-operations-real.webp"
+              alt="Nhân viên y tế phối hợp vận hành trong bệnh viện"
+              fill
+              sizes="(max-width: 900px) 100vw, 58vw"
+            />
+          </div>
+          <div className="about-story-note">
+            <span>Tầm nhìn</span>
+            <strong>Quy trình rõ hơn.<br />Đội ngũ chủ động hơn.</strong>
+            <p>Công nghệ đứng phía sau để con người có thêm thời gian cho công việc quan trọng.</p>
           </div>
         </div>
       </section>
 
-      <section id="nguyen-tac" className="page-section page-section-soft anchor-target">
+      <section id="nguyen-tac" className="about-principles-section anchor-target">
         <div className="shell">
-          <SectionHeading eyebrow="Nguyên tắc làm việc" title="Từ quy trình thật đến sản phẩm sử dụng được." />
-          <div className="simple-grid">
-            {principles.map(([Icon, title, description]) => (
-              <article className="simple-card" key={title}>
-                <Icon size={25} aria-hidden="true" />
-                <h2>{title}</h2>
-                <p>{description}</p>
+          <div className="about-principles-heading" data-reveal>
+            <p className="art-kicker art-kicker-light"><span /> Cách chúng tôi làm</p>
+            <h2>Ba nguyên tắc.<br />Một trải nghiệm mạch lạc.</h2>
+          </div>
+          <div className="about-principles-list">
+            {principles.map(({ icon: Icon, number, title, description }) => (
+              <article key={number} data-reveal>
+                <span>{number}</span>
+                <Icon aria-hidden="true" size={26} />
+                <div><h3>{title}</h3><p>{description}</p></div>
+                <MoveUpRight aria-hidden="true" size={19} />
               </article>
             ))}
           </div>

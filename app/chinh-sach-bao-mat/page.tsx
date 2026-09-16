@@ -28,12 +28,14 @@ export default function PrivacyPolicyPage() {
           <p>Biểu mẫu liên hệ có thể tiếp nhận họ tên, đơn vị, email hoặc số điện thoại, nhóm nhu cầu và nội dung mô tả do người dùng chủ động cung cấp.</p>
           <h2>Mục đích sử dụng</h2>
           <p>Thông tin được dùng để phản hồi yêu cầu, làm rõ phạm vi trao đổi và cải thiện chất lượng hỗ trợ. Bee System không sử dụng biểu mẫu này để tiếp nhận dữ liệu điều trị hoặc hồ sơ người bệnh.</p>
+          <h2>Đăng nhập Google để xem ứng dụng</h2>
+          <p>Khi người dùng chủ động chọn đăng nhập Google tại cổng ứng dụng, Bee System có thể lưu tên hiển thị, email, ảnh đại diện, dự án đã truy cập, thời điểm truy cập đầu tiên, gần nhất và tổng số lượt. Hệ thống không lưu mật khẩu, access token hay refresh token của Google. Dữ liệu này được dùng để quản lý quyền truy cập và hỗ trợ người dùng của dự án.</p>
           <h2>Chia sẻ và lưu trữ</h2>
           <p>Thông tin chỉ được chuyển qua hạ tầng vận hành website và hệ thống tiếp nhận yêu cầu do Bee System cấu hình. Thời gian lưu giữ được giới hạn theo nhu cầu xử lý yêu cầu và nghĩa vụ pháp lý áp dụng.</p>
           <h2>Quyền của người gửi</h2>
           <p>Người gửi có thể dùng trang <Link href="/lien-he">Liên hệ</Link> để yêu cầu kiểm tra, điều chỉnh hoặc xóa thông tin đã cung cấp, trong phạm vi Bee System có thể xác minh yêu cầu.</p>
           <h2>Cập nhật chính sách</h2>
-          <p>Nội dung có thể được cập nhật khi cách vận hành website hoặc quy trình tiếp nhận thông tin thay đổi. Phiên bản hiện tại được cập nhật ngày 15/09/2026.</p>
+          <p>Nội dung có thể được cập nhật khi cách vận hành website hoặc quy trình tiếp nhận thông tin thay đổi. Phiên bản hiện tại được cập nhật ngày 16/09/2026.</p>
         </div>
       </section>
     </main>

@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { normalizeProjectStage, projectStages, type Project } from "@/lib/projects";
 
 type EditableProject = Omit<Project, "id" | "created_at" | "updated_at"> & { id?: string };
-const emptyProject: EditableProject = { title: "", slug: "", summary: "", content: "", category: "Giải pháp y tế", project_stage: "Đang triển khai", image_url: null, image_alt: "", seo_title: "", seo_description: "", status: "draft", featured: false, published_at: null };
+const emptyProject: EditableProject = { title: "", slug: "", summary: "", content: "", category: "Giải pháp y tế", project_stage: "Đang triển khai", app_url: null, image_url: null, image_alt: "", seo_title: "", seo_description: "", status: "draft", featured: false, published_at: null };
 
 function slugify(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -39,7 +39,7 @@ export function ProjectEditor({ initialProjects, userId }: { initialProjects: Pr
     if (!editing.title.trim() || !editing.summary.trim() || !editing.content.trim()) return setMessage("Cần nhập tiêu đề, mô tả ngắn và nội dung dự án.");
     const slug = slugify(editing.slug || editing.title); if (!slug) return setMessage("Slug chưa hợp lệ.");
     setBusy(true); setMessage("");
-    const payload = { title: editing.title.trim(), slug, summary: editing.summary.trim(), content: editing.content.trim(), category: editing.category.trim(), project_stage: editing.project_stage.trim(), image_url: editing.image_url?.trim() || null, image_alt: editing.image_alt.trim() || editing.title.trim(), seo_title: editing.seo_title.trim() || editing.title.trim(), seo_description: editing.seo_description.trim() || editing.summary.trim(), status, featured: editing.featured, published_at: status === "published" ? (editing.published_at ?? new Date().toISOString()) : editing.published_at, created_by: userId, updated_by: userId };
+    const payload = { title: editing.title.trim(), slug, summary: editing.summary.trim(), content: editing.content.trim(), category: editing.category.trim(), project_stage: editing.project_stage.trim(), app_url: editing.app_url?.trim() || null, image_url: editing.image_url?.trim() || null, image_alt: editing.image_alt.trim() || editing.title.trim(), seo_title: editing.seo_title.trim() || editing.title.trim(), seo_description: editing.seo_description.trim() || editing.summary.trim(), status, featured: editing.featured, published_at: status === "published" ? (editing.published_at ?? new Date().toISOString()) : editing.published_at, created_by: userId, updated_by: userId };
     const supabase = createClient();
     const request = editing.id ? supabase.from("projects").update(payload).eq("id", editing.id).select().single() : supabase.from("projects").insert(payload).select().single();
     const { data, error } = await request;
@@ -61,6 +61,7 @@ export function ProjectEditor({ initialProjects, userId }: { initialProjects: Pr
       <div className="admin-field-row"><label>Tên dự án *<input value={editing.title} onChange={(e) => { change("title", e.target.value); if (!editing.id) change("slug", slugify(e.target.value)); }} /></label><label>Slug *<input value={editing.slug} onChange={(e) => change("slug", slugify(e.target.value))} /></label></div>
       <label>Mô tả ngắn *<textarea rows={3} value={editing.summary} onChange={(e) => change("summary", e.target.value)} /></label>
       <div className="admin-field-row"><label>Nhóm dự án<input value={editing.category} onChange={(e) => change("category", e.target.value)} /></label><label>Giai đoạn dự án<select value={normalizeProjectStage(editing.project_stage)} onChange={(e) => change("project_stage", e.target.value)}>{projectStages.map((stage) => <option value={stage} key={stage}>{stage}</option>)}</select></label></div>
+      <label>URL web app / bản demo<input type="url" value={editing.app_url ?? ""} onChange={(e) => change("app_url", e.target.value)} placeholder="https://app.beesystem.vn/du-an/..." /><small>Khách sẽ đăng nhập Google tại cổng ứng dụng trước khi mở đường dẫn này. Không nhập đường dẫn /admin.</small></label>
       <label>Nội dung dự án *<textarea className="admin-content-input" rows={18} value={editing.content} onChange={(e) => change("content", e.target.value)} placeholder={"## Bài toán\n\nNội dung…\n\n## Giải pháp\n\n- Hạng mục thứ nhất"} /></label>
       <div className="admin-field-row"><label>Ảnh dự án<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={uploadImage} /></label><label>Hoặc URL ảnh<input value={editing.image_url ?? ""} onChange={(e) => change("image_url", e.target.value)} /></label></div>
       <label>Mô tả ảnh<input value={editing.image_alt} onChange={(e) => change("image_alt", e.target.value)} /></label>

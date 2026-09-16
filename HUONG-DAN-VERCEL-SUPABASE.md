@@ -4,7 +4,7 @@ Tài liệu này dành cho người lần đầu thiết lập. Bạn không c�
 
 - Vercel để build và chạy website Next.js.
 - Supabase Free để lưu bài viết bằng PostgreSQL, lưu ảnh và xác thực người dùng.
-- Google OAuth để nhân viên đăng nhập ở `/admin`.
+- Google OAuth để nhân viên đăng nhập ở `/admin` và khách chủ động xác thực trước khi mở web app của dự án.
 - Row Level Security (RLS) để chỉ nhân viên được cấp quyền mới sửa bài.
 
 ## 1. Những gì đã có trong mã nguồn
@@ -17,6 +17,8 @@ Tài liệu này dành cho người lần đầu thiết lập. Bạn không c�
 - Tải ảnh tối đa 5 MB lên bucket `post-images`.
 - Tab **Trang chủ** cho phép admin sửa hero và tải ảnh tối đa 8 MB lên bucket `site-assets`.
 - Tab **Dự án** cho phép tạo, sửa, đăng, ẩn dự án, chọn dự án nổi bật và tải ảnh lên bucket `site-assets`.
+- Mỗi dự án có URL web app riêng; cổng `/ung-dung` hiển thị đăng nhập Google và chỉ ghi nhận người xem sau khi họ chủ động tiếp tục.
+- Tab **Khách đã xem** cho admin biết tài khoản Google nào đã mở dự án, lần truy cập gần nhất và tổng số lượt.
 - Trang chủ tự lấy dự án được đánh dấu nổi bật; `/du-an` và trang chi tiết chỉ hiển thị dự án đã đăng.
 - SEO theo từng bài: slug, title, description, ảnh/alt, Article schema, canonical và sitemap.
 - RLS và chỉ mục PostgreSQL cho slug, danh sách bài đã đăng, chuyên mục và tìm kiếm.
@@ -36,7 +38,7 @@ Gói Free không yêu cầu mua tên miền và phù hợp để demo. Dự án 
 1. Trong Supabase, chọn **SQL Editor** → **New query**.
 2. Mở file `supabase/schema.sql` trong mã nguồn, sao chép toàn bộ nội dung vào ô query.
 3. Bấm **Run**.
-4. Thấy thông báo thành công là xong. Trong **Table Editor** sẽ có `posts`, `projects` và `staff_members`; trong **Storage** sẽ có `post-images` và `site-assets`.
+4. Thấy thông báo thành công là xong. Trong **Table Editor** sẽ có `posts`, `projects`, `staff_members`, `customer_accounts` và `project_viewers`; trong **Storage** sẽ có `post-images` và `site-assets`.
 
 Không tắt RLS. File SQL đã tạo chính sách: khách chỉ đọc được bài đã xuất bản; nhân viên hợp lệ mới đọc/sửa được mọi bài.
 
@@ -47,7 +49,12 @@ Nếu bạn đã chạy `schema.sql` của bản trước, không cần chạy l
 
 Nếu `upgrade-homepage.sql` đã chạy thành công ở lần trước thì chỉ cần chạy `upgrade-projects.sql`.
 
-Nếu bạn cũng đã chạy `upgrade-projects.sql` ở bản cũ, chỉ chạy thêm `supabase/upgrade-project-stages.sql`. File này không xóa dữ liệu; nó đổi “Đang phát triển” thành “Đang triển khai” và cập nhật giá trị mặc định.
+Nếu bạn cũng đã chạy `upgrade-projects.sql` ở bản cũ, chạy thêm:
+
+1. `supabase/upgrade-project-stages.sql` để chuẩn hóa ba giai đoạn dự án.
+2. `supabase/upgrade-project-access.sql` để thêm URL web app và lịch sử khách đăng nhập Google.
+
+Hai file này không xóa bài viết hay dự án hiện có.
 
 ## 4. Lấy hai biến Supabase cho Vercel
 
@@ -101,10 +108,12 @@ Vercel → project `intro-web` → **Settings** → **Environment Variables**. �
 
 ```text
 NEXT_PUBLIC_SITE_URL=https://intro-web-pi.vercel.app
-NEXT_PUBLIC_APP_URL=https://intro-web-pi.vercel.app/admin
+NEXT_PUBLIC_APP_URL=https://app-cua-ban.vercel.app
 NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_REF.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=KEY_BAN_DA_COPY
 ```
+
+`NEXT_PUBLIC_APP_URL` là web app dành cho khách hàng, không phải `/admin`. Đây là đường dẫn dự phòng; trong tab **Dự án**, bạn có thể đặt URL riêng cho từng dự án. Nếu web app chưa có, có thể để biến này trống và bổ sung URL dự án sau.
 
 Chọn Production, Preview và Development nếu muốn mọi môi trường đều hoạt động. Sau khi thêm/sửa biến, vào **Deployments** và Redeploy bản mới nhất. Biến môi trường không tự đi vào deployment đã build trước đó.
 
@@ -173,15 +182,24 @@ Không đổi slug của bài đã được Google lập chỉ mục nếu khôn
 
 1. Mở trực tiếp `/admin`, đăng nhập rồi chọn tab **Dự án**.
 2. Chọn **+ Dự án mới**, nhập tên dự án, mô tả ngắn và nhóm dự án. Ở **Giai đoạn dự án**, chọn một trong ba giá trị: **Đã hoàn thành**, **Đang triển khai** hoặc **Đang nghiên cứu**.
-3. Soạn nội dung chi tiết bằng cùng cú pháp tiêu đề, danh sách và trích dẫn như bài viết.
-4. Tải ảnh JPG, PNG, WebP hoặc GIF dưới 8 MB; nên dùng ảnh ngang tối thiểu khoảng 1200 × 800 px và điền mô tả ảnh.
-5. Chọn **Dự án nổi bật** nếu muốn dự án này xuất hiện trong khối dự án ở trang chủ.
-6. Điền tiêu đề và mô tả SEO, sau đó chọn **Lưu nháp** hoặc **Đăng dự án**.
-7. **Ẩn dự án** sẽ gỡ dự án khỏi trang công khai nhưng vẫn giữ dữ liệu trong CMS.
+3. Điền **URL web app / bản demo** bằng đường dẫn thật của dự án, ví dụ `https://app-du-an.vercel.app`. Không nhập đường dẫn quản trị `/admin`.
+4. Soạn nội dung chi tiết bằng cùng cú pháp tiêu đề, danh sách và trích dẫn như bài viết.
+5. Tải ảnh JPG, PNG, WebP hoặc GIF dưới 8 MB; nên dùng ảnh ngang tối thiểu khoảng 1200 × 800 px và điền mô tả ảnh.
+6. Chọn **Dự án nổi bật** nếu muốn dự án này xuất hiện trong khối dự án ở trang chủ.
+7. Điền tiêu đề và mô tả SEO, sau đó chọn **Lưu nháp** hoặc **Đăng dự án**.
+8. **Ẩn dự án** sẽ gỡ dự án khỏi trang công khai nhưng vẫn giữ dữ liệu trong CMS.
 
 Sau khi lưu/đăng, hệ thống tự xóa cache cho trang chủ, danh sách và trang chi tiết dự án. Không cần Redeploy Vercel mỗi lần sửa nội dung.
 
 Trang `/du-an` tự chia dự án thành ba nhóm theo giai đoạn. Menu **Dự án** trên thanh điều hướng cũng dẫn thẳng đến từng nhóm này.
+
+### Luồng khách mở web app
+
+1. Khách bấm **Mở ứng dụng** trên thẻ hoặc trang chi tiết dự án.
+2. Cổng `/ung-dung` giải thích dữ liệu nào sẽ được lưu và hiển thị nút **Tiếp tục bằng Google**.
+3. Chỉ sau khi khách chủ động đăng nhập, hàm `record_project_access` mới lưu tên, email, ảnh đại diện, dự án, lần đầu, lần gần nhất và tổng số lượt.
+4. Mật khẩu và Google token không được lưu trong các bảng này.
+5. Admin xem danh sách trong tab **Khách đã xem**. Khách không được vào trang quản trị và không thể đọc danh sách của người khác.
 
 ## 11. Vì sao dùng PostgreSQL và các chỉ mục nào đã có
 
@@ -217,10 +235,11 @@ npm run build
 - Navbar và footer công khai không có nút quản trị.
 - Admin đổi được ảnh/nội dung hero từ tab Trang chủ.
 - Admin tạo, sửa, đăng/ẩn dự án và chọn dự án nổi bật từ tab Dự án.
+- Dự án có URL web app; cổng ứng dụng đăng nhập Google và tab Khách đã xem nhận đúng dữ liệu.
 - Lưu nháp không xuất hiện ở `/kien-thuc`.
 - Đăng bài tạo đúng URL; gỡ bài làm URL đó không còn công khai.
 - Ảnh tải lên hiển thị và có alt text.
-- `https://intro-web-pi.vercel.app/robots.txt` chặn `/admin`, `/auth`, `/api`.
+- `https://intro-web-pi.vercel.app/robots.txt` chặn `/admin`, `/auth`, `/api` và `/ung-dung`.
 - `https://intro-web-pi.vercel.app/sitemap.xml` chỉ có bài đã đăng.
 - Khi có tên miền thật, đổi Site URL/Redirect URLs ở Supabase, Google và các biến Vercel rồi Redeploy.
 
