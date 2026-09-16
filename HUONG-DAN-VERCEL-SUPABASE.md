@@ -10,10 +10,12 @@ Tài liệu này dành cho người lần đầu thiết lập. Bạn không c�
 ## 1. Những gì đã có trong mã nguồn
 
 - `/admin`: trang quản trị bài viết, không cho công cụ tìm kiếm lập chỉ mục.
+- Đường dẫn `/admin` không xuất hiện trong navbar hay footer công khai; nhân viên truy cập trực tiếp.
 - `/auth/callback`: nhận kết quả đăng nhập Google.
 - `/kien-thuc`: chỉ hiển thị các bài có trạng thái `published`.
 - Nút **Lưu nháp**, **Đăng bài**, **Gỡ bài**. Gỡ bài chuyển về bản nháp, không xóa dữ liệu.
 - Tải ảnh tối đa 5 MB lên bucket `post-images`.
+- Tab **Trang chủ** cho phép admin sửa hero và tải ảnh tối đa 8 MB lên bucket `site-assets`.
 - SEO theo từng bài: slug, title, description, ảnh/alt, Article schema, canonical và sitemap.
 - RLS và chỉ mục PostgreSQL cho slug, danh sách bài đã đăng, chuyên mục và tìm kiếm.
 
@@ -35,6 +37,8 @@ Gói Free không yêu cầu mua tên miền và phù hợp để demo. Dự án 
 4. Thấy thông báo thành công là xong. Trong **Table Editor** sẽ có `posts` và `staff_members`; trong **Storage** sẽ có `post-images`.
 
 Không tắt RLS. File SQL đã tạo chính sách: khách chỉ đọc được bài đã xuất bản; nhân viên hợp lệ mới đọc/sửa được mọi bài.
+
+Nếu bạn đã chạy `schema.sql` của bản trước, không cần chạy lại toàn bộ. Chỉ mở và chạy một lần file `supabase/upgrade-homepage.sql` để thêm phần quản lý trang chủ và kho ảnh giao diện.
 
 ## 4. Lấy hai biến Supabase cho Vercel
 
@@ -147,7 +151,16 @@ where email = 'nhan-vien@example.com';
 
 Không đổi slug của bài đã được Google lập chỉ mục nếu không thiết lập redirect, vì đường dẫn cũ sẽ trả 404.
 
-## 9. Vì sao dùng PostgreSQL và các chỉ mục nào đã có
+## 9. Cập nhật ảnh và nội dung trang chủ
+
+1. Nhân viên mở trực tiếp `/admin`; website công khai không hiển thị đường dẫn này.
+2. Chọn tab **Trang chủ**.
+3. Sửa dòng giới thiệu, tiêu đề, phần chữ màu vàng và mô tả.
+4. Chọn ảnh JPG, PNG, WebP hoặc GIF dưới 8 MB. Nên dùng ảnh ngang/dọc gần tỷ lệ 4:5, kích thước tối thiểu khoảng 900 × 1080 px.
+5. Viết mô tả ảnh đúng nội dung để hỗ trợ SEO và người dùng trình đọc màn hình.
+6. Xem trước rồi bấm **Lưu trang chủ**. Trang công khai được làm mới ngay sau khi cache được xóa.
+
+## 10. Vì sao dùng PostgreSQL và các chỉ mục nào đã có
 
 PostgreSQL phù hợp vì dữ liệu bài viết có cấu trúc, cần lọc theo trạng thái/ngày/chuyên mục và cần phân quyền chắc chắn. Với quy mô website doanh nghiệp, tốc độ thường phụ thuộc nhiều vào chỉ mục và cache hơn việc chọn một cơ sở dữ liệu NoSQL.
 
@@ -159,7 +172,7 @@ File SQL tạo sẵn:
 - GIN full-text index cho tiêu đề + mô tả khi mở rộng tìm kiếm.
 - index `updated_at` cho danh sách quản trị.
 
-## 10. Chạy và kiểm tra trên máy
+## 11. Chạy và kiểm tra trên máy
 
 ```bash
 cp .env.example .env.local
@@ -174,9 +187,11 @@ npm run lint
 npm run build
 ```
 
-## 11. Checklist sau khi deploy
+## 12. Checklist sau khi deploy
 
 - `/admin` đăng nhập được và tài khoản lạ bị từ chối.
+- Navbar và footer công khai không có nút quản trị.
+- Admin đổi được ảnh/nội dung hero từ tab Trang chủ.
 - Lưu nháp không xuất hiện ở `/kien-thuc`.
 - Đăng bài tạo đúng URL; gỡ bài làm URL đó không còn công khai.
 - Ảnh tải lên hiển thị và có alt text.
@@ -184,7 +199,7 @@ npm run build
 - `https://intro-web-pi.vercel.app/sitemap.xml` chỉ có bài đã đăng.
 - Khi có tên miền thật, đổi Site URL/Redirect URLs ở Supabase, Google và các biến Vercel rồi Redeploy.
 
-## 12. Tài liệu chính thức
+## 13. Tài liệu chính thức
 
 - Supabase: [Google login](https://supabase.com/docs/guides/auth/social-login/auth-google)
 - Supabase: [Server-side auth với Next.js](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)

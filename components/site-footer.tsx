@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { appUrl } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -28,7 +26,6 @@ export function SiteFooter() {
               <Link href="/gioi-thieu">Giới thiệu</Link>
               <Link href="/lien-he">Liên hệ</Link>
               <Link href="/chinh-sach-bao-mat">Chính sách bảo mật</Link>
-              <a href={appUrl}>Web app <ArrowUpRight size={14} /></a>
             </div>
           </div>
         </div>

@@ -9,9 +9,10 @@ export async function POST(request: Request) {
   const { data: staff } = await supabase.from("staff_members").select("active").eq("user_id", user.id).maybeSingle();
   if (!staff?.active) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const body = await request.json().catch(() => ({ slugs: [] })) as { slugs?: string[] };
+  const body = await request.json().catch(() => ({ slugs: [] })) as { slugs?: string[]; homepage?: boolean };
   revalidatePath("/kien-thuc");
   revalidatePath("/sitemap.xml");
+  if (body.homepage) revalidatePath("/");
   for (const slug of body.slugs?.slice(0, 5) ?? []) {
     if (/^[a-z0-9-]+$/.test(slug)) revalidatePath(`/kien-thuc/${slug}`);
   }

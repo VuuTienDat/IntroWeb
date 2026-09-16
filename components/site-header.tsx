@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Menu } from "lucide-react";
-import { appUrl } from "@/lib/site";
+import { Menu } from "lucide-react";
 
 const nav = [
   ["Giới thiệu", "/gioi-thieu"],
@@ -23,20 +22,12 @@ export function SiteHeader() {
             <Link key={href} href={href} className="nav-link">{label}</Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
-          <a href={appUrl} className="button button-dark">
-            Quản trị <ArrowUpRight size={16} aria-hidden="true" />
-          </a>
-        </div>
         <details className="mobile-menu lg:hidden">
           <summary aria-label="Mở menu"><Menu size={24} aria-hidden="true" /></summary>
           <nav aria-label="Điều hướng di động">
             {nav.map(([label, href]) => (
               <Link key={href} href={href}>{label}</Link>
             ))}
-            <a href={appUrl} className="mobile-app-link">
-              Quản trị bài viết <ArrowUpRight size={16} />
-            </a>
           </nav>
         </details>
       </div>
